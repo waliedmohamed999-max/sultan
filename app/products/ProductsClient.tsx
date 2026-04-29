@@ -1,5 +1,6 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
 import { ProductGrid } from '@/components/products/ProductGrid'
 import { useSiteContent } from '@/components/cms/useSiteContent'
 import { categoryLabels, type Category } from '@/data/products'
@@ -7,7 +8,10 @@ import type { SiteContent } from '@/data/siteContent'
 
 const categoryKeys = Object.keys(categoryLabels) as Category[]
 
-export function ProductsClient({ initialContent, selected }: { initialContent: SiteContent; selected?: Category }) {
+export function ProductsClient({ initialContent }: { initialContent: SiteContent }) {
+  const searchParams = useSearchParams()
+  const category = searchParams.get('category') as Category | null
+  const selected = category && categoryKeys.includes(category) ? category : undefined
   const { content } = useSiteContent(initialContent)
   const filtered = selected ? content.products.filter((product) => product.category === selected) : content.products
   const page = content.pages.products
