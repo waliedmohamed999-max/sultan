@@ -1856,7 +1856,7 @@ body {
 }
 
 .premium-socials span,
-.premium-payments span {
+.premium-payments > span {
   display: inline-grid;
   min-height: 38px;
   place-items: center;
@@ -1864,6 +1864,113 @@ body {
   border-radius: 999px;
   padding: 8px 12px;
   color: #fff;
+}
+
+.payment-logo {
+  position: relative;
+  display: inline-flex;
+  min-width: 108px;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 61, 46, 0.12);
+  border-radius: 13px;
+  background: #fff;
+  padding: 8px 13px;
+  color: var(--premium-primary);
+  font-family: 'Poppins', 'Cairo', sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 8px 18px rgba(11, 31, 23, 0.06);
+}
+
+.payment-logo-mastercard {
+  min-width: 142px;
+  justify-content: flex-end;
+  padding-inline-start: 54px;
+  color: #1d1d1d;
+}
+
+.payment-logo-mastercard i,
+.payment-logo-mastercard b {
+  position: absolute;
+  top: 50%;
+  width: 31px;
+  height: 31px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+}
+
+.payment-logo-mastercard i {
+  left: 14px;
+  background: #eb001b;
+}
+
+.payment-logo-mastercard b {
+  left: 34px;
+  background: #f79e1b;
+  mix-blend-mode: multiply;
+}
+
+.payment-logo-visa {
+  min-width: 96px;
+  color: #173b8f;
+  font-size: 21px;
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+.payment-logo-mada {
+  min-width: 100px;
+  justify-content: space-between;
+  color: #1f8f52;
+}
+
+.payment-logo-mada strong {
+  font-size: 20px;
+}
+
+.payment-logo-mada em {
+  width: 29px;
+  height: 20px;
+  border-radius: 4px;
+  background:
+    linear-gradient(135deg, transparent 0 45%, #2aa8df 46% 58%, transparent 59%),
+    linear-gradient(45deg, #63bd44 0 45%, transparent 46%),
+    linear-gradient(135deg, transparent 0 48%, #f4b32f 49% 63%, transparent 64%);
+}
+
+.payment-logo-apple {
+  min-width: 112px;
+  gap: 4px;
+  color: #111;
+  font-size: 18px;
+}
+
+.payment-logo-apple span {
+  font-weight: 700;
+}
+
+.payment-logo-stc {
+  min-width: 104px;
+  background: #4f1fa3;
+  color: #fff;
+  text-transform: lowercase;
+}
+
+.payment-logo-tabby {
+  min-width: 100px;
+  background: #24d3a0;
+  color: #13231d;
+  text-transform: lowercase;
+}
+
+.payment-logo-cash,
+.payment-logo-generic {
+  min-width: 92px;
 }
 
 .premium-footer-bottom {
@@ -2165,7 +2272,7 @@ body {
   }
 
   .premium-socials span,
-  .premium-payments span {
+  .premium-payments > span {
     min-height: 34px;
     padding: 7px 10px;
     font-size: 13px;
@@ -2416,6 +2523,14 @@ body {
 .dashboard-list-row {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
+}
+
+.dashboard-list-row-payment {
+  grid-template-columns: 170px minmax(0, 1fr) auto;
+}
+
+.dashboard-list-row-payment .payment-logo {
+  width: 100%;
 }
 
 .dashboard-error {
@@ -2807,7 +2922,8 @@ body {
   }
 
   .dashboard-toggle-grid,
-  .dashboard-list-row {
+  .dashboard-list-row,
+  .dashboard-list-row-payment {
     grid-template-columns: 1fr;
   }
 

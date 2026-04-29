@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Save, RotateCcw, Plus, Trash2 } from 'lucide-react'
 import { useSiteContent } from '@/components/cms/useSiteContent'
+import { PaymentMethodLogo } from '@/components/ui/PaymentMethodLogo'
 import type { Category, Product } from '@/data/products'
 import type { SiteContent } from '@/data/siteContent'
 
@@ -303,7 +304,7 @@ function SectionVisibilityEditor({
   )
 }
 
-function TextListEditor({ title, addLabel, value, onChange }: { title: string; addLabel: string; value: string[]; onChange: (value: string[]) => void }) {
+function TextListEditor({ title, addLabel, value, onChange, paymentPreview = false }: { title: string; addLabel: string; value: string[]; onChange: (value: string[]) => void; paymentPreview?: boolean }) {
   const updateItem = (index: number, nextValue: string) => onChange(value.map((item, itemIndex) => (itemIndex === index ? nextValue : item)))
   const deleteItem = (index: number) => onChange(value.filter((_, itemIndex) => itemIndex !== index))
 
@@ -314,7 +315,8 @@ function TextListEditor({ title, addLabel, value, onChange }: { title: string; a
         <button type="button" onClick={() => onChange([...value, 'عنصر جديد'])}><Plus size={16} /> {addLabel}</button>
       </div>
       {value.map((item, index) => (
-        <div key={`${title}-${index}`} className="dashboard-list-row">
+        <div key={`${title}-${index}`} className={`dashboard-list-row${paymentPreview ? ' dashboard-list-row-payment' : ''}`}>
+          {paymentPreview && <PaymentMethodLogo name={item} />}
           <input value={item} onChange={(event) => updateItem(index, event.target.value)} />
           <button type="button" className="dashboard-danger" onClick={() => deleteItem(index)}><Trash2 size={16} /> حذف</button>
         </div>
@@ -517,7 +519,7 @@ function CheckoutEditor({ content, setContent }: { content: SiteContent; setCont
         <DashboardInput label="Placeholder العنوان" value={page.addressPlaceholder} onChange={(addressPlaceholder) => update({ ...page, addressPlaceholder })} />
       </div>
       <DashboardInput label="عنوان طرق الدفع" value={page.paymentTitle} onChange={(paymentTitle) => update({ ...page, paymentTitle })} />
-      <TextListEditor title="طرق الدفع" addLabel="إضافة طريقة دفع" value={page.paymentMethods} onChange={(paymentMethods) => update({ ...page, paymentMethods })} />
+      <TextListEditor title="طرق الدفع" addLabel="إضافة طريقة دفع" value={page.paymentMethods} onChange={(paymentMethods) => update({ ...page, paymentMethods })} paymentPreview />
     </div>
   )
 }

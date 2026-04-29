@@ -1,6 +1,7 @@
 'use client'
 
 import { useSiteContent } from '@/components/cms/useSiteContent'
+import { PaymentMethodLogo } from '@/components/ui/PaymentMethodLogo'
 import { siteContentDefaults } from '@/data/siteContent'
 
 export default function CheckoutPage() {
@@ -32,7 +33,7 @@ export default function CheckoutPage() {
           <h2 className="mb-3 text-2xl font-black text-primary">{page.paymentTitle}</h2>
           <div className="flex flex-wrap gap-2 text-sm font-bold">
             {page.paymentMethods.map((item) => (
-              <span key={item} className="rounded-full bg-white px-3 py-2 text-primary">{item}</span>
+              <PaymentMethodLogo key={item} name={item} />
             ))}
           </div>
         </aside>

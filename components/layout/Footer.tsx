@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Instagram, Mail, Phone, ShieldCheck, Smartphone, Youtube } from 'lucide-react'
+import { PaymentMethodLogo } from '@/components/ui/PaymentMethodLogo'
 
 export function Footer() {
   return (
@@ -37,7 +38,7 @@ export function Footer() {
           <p><ShieldCheck size={16} /> ISO 22000 وHACCP</p>
           <div className="premium-payments">
             {['Visa', 'Mada', 'Apple Pay', 'STC Pay', 'Tabby', 'Cash'].map((item) => (
-              <span key={item}>{item}</span>
+              <PaymentMethodLogo key={item} name={item} />
             ))}
           </div>
         </div>
