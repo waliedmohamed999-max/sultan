@@ -30,6 +30,17 @@ const categoryLabels: Record<Category, string> = {
   bundle: 'باقات التوفير'
 }
 
+const homeSectionLabels: Record<keyof SiteContent['home']['sectionVisibility'], string> = {
+  offers: 'قسم العروض',
+  collections: 'قسم الأقسام',
+  bestSellers: 'قسم الأكثر طلبا',
+  why: 'قسم لماذا نحن',
+  certifications: 'قسم الشهادات',
+  testimonials: 'قسم آراء العملاء',
+  journal: 'قسم المدونة',
+  cta: 'قسم الدعوة النهائية'
+}
+
 export function DashboardClient({ initialContent }: { initialContent: SiteContent }) {
   const { content, setContent, save, reset } = useSiteContent(initialContent)
   const [tab, setTab] = useState<Tab>('hero')
@@ -131,13 +142,17 @@ export function DashboardClient({ initialContent }: { initialContent: SiteConten
         {tab === 'home' && (
           <div className="dashboard-card">
             <h1>محتوى الصفحة الرئيسية بالكامل</h1>
+            <SectionVisibilityEditor
+              value={content.home.sectionVisibility}
+              onChange={(sectionVisibility) => setContent({ ...content, home: { ...content.home, sectionVisibility } })}
+            />
             <HomeSectionEditor title="قسم العروض" value={content.home.offers} onChange={(offers) => setContent({ ...content, home: { ...content.home, offers } })} />
             <HomeSectionEditor title="قسم الأقسام" value={content.home.collections} onChange={(collections) => setContent({ ...content, home: { ...content.home, collections } })} />
             <HomeSectionEditor title="قسم الأكثر طلبا" value={content.home.bestSellers} onChange={(bestSellers) => setContent({ ...content, home: { ...content.home, bestSellers } })} />
             <HomeSectionEditor title="قسم لماذا نحن" value={content.home.why} onChange={(why) => setContent({ ...content, home: { ...content.home, why } })} />
-            <DashboardTextarea label="عناصر لماذا نحن، كل عنصر: العنوان | الوصف" value={content.home.whyItems.map((item) => `${item.title} | ${item.text}`).join('\n')} onChange={(value) => setContent({ ...content, home: { ...content.home, whyItems: value.split('\n').filter(Boolean).map((line) => { const [title, ...rest] = line.split('|'); return { title: title.trim(), text: rest.join('|').trim() } }) } })} />
+            <PairListEditor title="عناصر لماذا نحن" firstLabel="العنوان" secondLabel="الوصف" value={content.home.whyItems} onChange={(whyItems) => setContent({ ...content, home: { ...content.home, whyItems } })} />
             <HomeSectionEditor title="قسم الشهادات" value={content.home.certifications} onChange={(certifications) => setContent({ ...content, home: { ...content.home, certifications } })} />
-            <DashboardTextarea label="الشهادات، كل شهادة في سطر" value={content.home.certificationItems.join('\n')} onChange={(value) => setContent({ ...content, home: { ...content.home, certificationItems: value.split('\n').filter(Boolean) } })} />
+            <TextListEditor title="الشهادات" addLabel="إضافة شهادة" value={content.home.certificationItems} onChange={(certificationItems) => setContent({ ...content, home: { ...content.home, certificationItems } })} />
             <HomeSectionEditor title="قسم آراء العملاء" value={content.home.testimonials} onChange={(testimonials) => setContent({ ...content, home: { ...content.home, testimonials } })} />
             <HomeSectionEditor title="قسم المدونة" value={content.home.journal} onChange={(journal) => setContent({ ...content, home: { ...content.home, journal } })} />
             <div className="dashboard-subcard">
@@ -201,8 +216,10 @@ export function DashboardClient({ initialContent }: { initialContent: SiteConten
                 <DashboardInput label="اسم البراند" value={content.header.brandName} onChange={(brandName) => setContent({ ...content, header: { ...content.header, brandName } })} />
                 <DashboardInput label="وصف البراند" value={content.header.brandSubline} onChange={(brandSubline) => setContent({ ...content, header: { ...content.header, brandSubline } })} />
               </div>
-              <DashboardTextarea label="رسائل الشريط العلوي، كل رسالة في سطر" value={content.header.tickerMessages.join('\n')} onChange={(value) => setContent({ ...content, header: { ...content.header, tickerMessages: toLines(value) } })} />
-              <DashboardTextarea label="روابط القائمة، كل سطر: النص | الرابط" value={content.header.navLinks.map((item) => `${item.label} | ${item.href}`).join('\n')} onChange={(value) => setContent({ ...content, header: { ...content.header, navLinks: parsePairs(value) } })} />
+              <DashboardInput label="مسار صورة اللوجو" value={content.header.logoImage || ''} onChange={(logoImage) => setContent({ ...content, header: { ...content.header, logoImage } })} />
+              <ImageField label="زر تغيير اللوجو" value={content.header.logoImage || ''} onChange={(logoImage) => setContent({ ...content, header: { ...content.header, logoImage } })} />
+              <TextListEditor title="رسائل الشريط العلوي" addLabel="إضافة رسالة" value={content.header.tickerMessages} onChange={(tickerMessages) => setContent({ ...content, header: { ...content.header, tickerMessages } })} />
+              <LinkListEditor title="روابط القائمة والمسارات" value={content.header.navLinks} onChange={(navLinks) => setContent({ ...content, header: { ...content.header, navLinks } })} />
             </div>
 
             <HomeSectionEditor title="صفحة المنتجات" value={content.pages.products} onChange={(products) => setContent({ ...content, pages: { ...content.pages, products: { ...content.pages.products, ...products } } })} />
@@ -221,7 +238,7 @@ export function DashboardClient({ initialContent }: { initialContent: SiteConten
                 <DashboardInput label="العنوان" value={content.pages.about.title} onChange={(title) => setContent({ ...content, pages: { ...content.pages, about: { ...content.pages.about, title } } })} />
               </div>
               <DashboardTextarea label="الوصف" value={content.pages.about.description} onChange={(description) => setContent({ ...content, pages: { ...content.pages, about: { ...content.pages.about, description } } })} />
-              <DashboardTextarea label="النقاط، كل نقطة في سطر" value={content.pages.about.points.join('\n')} onChange={(value) => setContent({ ...content, pages: { ...content.pages, about: { ...content.pages.about, points: toLines(value) } } })} />
+              <TextListEditor title="نقاط صفحة من نحن" addLabel="إضافة نقطة" value={content.pages.about.points} onChange={(points) => setContent({ ...content, pages: { ...content.pages, about: { ...content.pages.about, points } } })} />
             </div>
 
             <CheckoutEditor content={content} setContent={setContent} />
@@ -260,6 +277,106 @@ function HomeSectionEditor({ title, value, onChange }: { title: string; value: {
         <DashboardInput label="العنوان" value={value.title} onChange={(sectionTitle) => onChange({ ...value, title: sectionTitle })} />
         <DashboardInput label="الوصف المختصر" value={value.subtitle} onChange={(subtitle) => onChange({ ...value, subtitle })} />
       </div>
+    </div>
+  )
+}
+
+function SectionVisibilityEditor({
+  value,
+  onChange
+}: {
+  value: SiteContent['home']['sectionVisibility']
+  onChange: (value: SiteContent['home']['sectionVisibility']) => void
+}) {
+  return (
+    <div className="dashboard-subcard">
+      <h2>إظهار وحذف أقسام الصفحة</h2>
+      <div className="dashboard-toggle-grid">
+        {(Object.keys(homeSectionLabels) as Array<keyof SiteContent['home']['sectionVisibility']>).map((key) => (
+          <label key={key} className="dashboard-check dashboard-toggle-row">
+            <input type="checkbox" checked={value[key]} onChange={(event) => onChange({ ...value, [key]: event.target.checked })} />
+            {homeSectionLabels[key]}
+          </label>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function TextListEditor({ title, addLabel, value, onChange }: { title: string; addLabel: string; value: string[]; onChange: (value: string[]) => void }) {
+  const updateItem = (index: number, nextValue: string) => onChange(value.map((item, itemIndex) => (itemIndex === index ? nextValue : item)))
+  const deleteItem = (index: number) => onChange(value.filter((_, itemIndex) => itemIndex !== index))
+
+  return (
+    <div className="dashboard-list-editor">
+      <div className="dashboard-card-head">
+        <h2>{title}</h2>
+        <button type="button" onClick={() => onChange([...value, 'عنصر جديد'])}><Plus size={16} /> {addLabel}</button>
+      </div>
+      {value.map((item, index) => (
+        <div key={`${title}-${index}`} className="dashboard-list-row">
+          <input value={item} onChange={(event) => updateItem(index, event.target.value)} />
+          <button type="button" className="dashboard-danger" onClick={() => deleteItem(index)}><Trash2 size={16} /> حذف</button>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function PairListEditor({
+  title,
+  firstLabel,
+  secondLabel,
+  value,
+  onChange
+}: {
+  title: string
+  firstLabel: string
+  secondLabel: string
+  value: Array<{ title: string; text: string }>
+  onChange: (value: Array<{ title: string; text: string }>) => void
+}) {
+  const updateItem = (index: number, nextValue: { title: string; text: string }) => onChange(value.map((item, itemIndex) => (itemIndex === index ? nextValue : item)))
+  const deleteItem = (index: number) => onChange(value.filter((_, itemIndex) => itemIndex !== index))
+
+  return (
+    <div className="dashboard-subcard">
+      <div className="dashboard-card-head">
+        <h2>{title}</h2>
+        <button type="button" onClick={() => onChange([...value, { title: 'عنوان جديد', text: 'وصف جديد' }])}><Plus size={16} /> إضافة عنصر</button>
+      </div>
+      {value.map((item, index) => (
+        <div key={`${title}-${index}`} className="dashboard-repeat-card">
+          <div className="dashboard-grid-2">
+            <DashboardInput label={firstLabel} value={item.title} onChange={(itemTitle) => updateItem(index, { ...item, title: itemTitle })} />
+            <DashboardInput label={secondLabel} value={item.text} onChange={(text) => updateItem(index, { ...item, text })} />
+          </div>
+          <button type="button" className="dashboard-danger" onClick={() => deleteItem(index)}><Trash2 size={16} /> حذف العنصر</button>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function LinkListEditor({ title, value, onChange }: { title: string; value: SiteContent['header']['navLinks']; onChange: (value: SiteContent['header']['navLinks']) => void }) {
+  const updateItem = (index: number, nextValue: SiteContent['header']['navLinks'][number]) => onChange(value.map((item, itemIndex) => (itemIndex === index ? nextValue : item)))
+  const deleteItem = (index: number) => onChange(value.filter((_, itemIndex) => itemIndex !== index))
+
+  return (
+    <div className="dashboard-list-editor">
+      <div className="dashboard-card-head">
+        <h2>{title}</h2>
+        <button type="button" onClick={() => onChange([...value, { label: 'رابط جديد', href: '/' }])}><Plus size={16} /> إضافة مسار</button>
+      </div>
+      {value.map((item, index) => (
+        <div key={`${item.href}-${index}`} className="dashboard-repeat-card">
+          <div className="dashboard-grid-2">
+            <DashboardInput label="نص الرابط" value={item.label} onChange={(label) => updateItem(index, { ...item, label })} />
+            <DashboardInput label="المسار" value={item.href} onChange={(href) => updateItem(index, { ...item, href })} />
+          </div>
+          <button type="button" className="dashboard-danger" onClick={() => deleteItem(index)}><Trash2 size={16} /> حذف المسار</button>
+        </div>
+      ))}
     </div>
   )
 }
@@ -316,6 +433,12 @@ function ImagesEditor({
     <div className="dashboard-card">
       <h1>إدارة الصور</h1>
       <p className="dashboard-help">يمكنك كتابة مسار صورة من مجلد public مثل /images/dishwashing.jpeg أو رفع صورة من جهازك ثم الضغط على حفظ التغييرات.</p>
+
+      <div className="dashboard-subcard">
+        <h2>اللوجو</h2>
+        <DashboardInput label="مسار صورة اللوجو" value={content.header.logoImage || ''} onChange={(logoImage) => setContent({ ...content, header: { ...content.header, logoImage } })} />
+        <ImageField label="زر تغيير اللوجو" value={content.header.logoImage || ''} onChange={(logoImage) => setContent({ ...content, header: { ...content.header, logoImage } })} />
+      </div>
 
       <div className="dashboard-subcard">
         <h2>صورة الواجهة الرئيسية</h2>
@@ -394,7 +517,7 @@ function CheckoutEditor({ content, setContent }: { content: SiteContent; setCont
         <DashboardInput label="Placeholder العنوان" value={page.addressPlaceholder} onChange={(addressPlaceholder) => update({ ...page, addressPlaceholder })} />
       </div>
       <DashboardInput label="عنوان طرق الدفع" value={page.paymentTitle} onChange={(paymentTitle) => update({ ...page, paymentTitle })} />
-      <DashboardTextarea label="طرق الدفع، كل طريقة في سطر" value={page.paymentMethods.join('\n')} onChange={(value) => update({ ...page, paymentMethods: toLines(value) })} />
+      <TextListEditor title="طرق الدفع" addLabel="إضافة طريقة دفع" value={page.paymentMethods} onChange={(paymentMethods) => update({ ...page, paymentMethods })} />
     </div>
   )
 }
@@ -419,7 +542,7 @@ function AuthPagesEditor({ content, setContent }: { content: SiteContent; setCon
         </div>
         <DashboardTextarea label="الوصف" value={login.description} onChange={(description) => updateLogin({ ...login, description })} />
         <DashboardTextarea label="وصف الكرت" value={login.cardDescription} onChange={(cardDescription) => updateLogin({ ...login, cardDescription })} />
-        <DashboardTextarea label="النقاط، كل نقطة في سطر" value={login.points.join('\n')} onChange={(value) => updateLogin({ ...login, points: toLines(value) })} />
+        <TextListEditor title="نقاط صفحة الدخول" addLabel="إضافة نقطة" value={login.points} onChange={(points) => updateLogin({ ...login, points })} />
         <DashboardInput label="رابط إنشاء الحساب" value={login.registerLinkText} onChange={(registerLinkText) => updateLogin({ ...login, registerLinkText })} />
       </div>
 

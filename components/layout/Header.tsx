@@ -31,7 +31,13 @@ export function Header() {
       <div className="premium-nav-wrap">
         <div className="container premium-nav">
           <Link href="/" className="premium-logo" aria-label="I Natural">
-            <span>iN</span>
+            <span>
+              {content.header.logoImage ? (
+                <img src={content.header.logoImage} alt="" />
+              ) : (
+                'iN'
+              )}
+            </span>
             <strong>
               {content.header.brandName}
               <small>{content.header.brandSubline}</small>

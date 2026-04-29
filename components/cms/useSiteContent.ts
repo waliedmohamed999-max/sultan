@@ -12,6 +12,7 @@ function mergeSiteContent(initialContent: SiteContent, parsed: Partial<SiteConte
     header: {
       ...initialContent.header,
       ...parsed.header,
+      logoImage: parsed.header?.logoImage || initialContent.header.logoImage,
       tickerMessages: parsed.header?.tickerMessages?.length ? parsed.header.tickerMessages : initialContent.header.tickerMessages,
       navLinks: parsed.header?.navLinks?.length ? parsed.header.navLinks : initialContent.header.navLinks
     },
@@ -19,6 +20,10 @@ function mergeSiteContent(initialContent: SiteContent, parsed: Partial<SiteConte
     home: {
       ...initialContent.home,
       ...parsed.home,
+      sectionVisibility: {
+        ...initialContent.home.sectionVisibility,
+        ...parsed.home?.sectionVisibility
+      },
       offers: { ...initialContent.home.offers, ...parsed.home?.offers },
       collections: { ...initialContent.home.collections, ...parsed.home?.collections },
       bestSellers: { ...initialContent.home.bestSellers, ...parsed.home?.bestSellers },

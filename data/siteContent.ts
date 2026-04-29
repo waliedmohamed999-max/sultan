@@ -42,10 +42,21 @@ export interface HeaderContent {
   tickerMessages: string[]
   brandName: string
   brandSubline: string
+  logoImage?: string
   navLinks: NavLinkContent[]
 }
 
 export interface HomeContent {
+  sectionVisibility: {
+    offers: boolean
+    collections: boolean
+    bestSellers: boolean
+    why: boolean
+    certifications: boolean
+    testimonials: boolean
+    journal: boolean
+    cta: boolean
+  }
   offers: HomeSectionCopy
   collections: HomeSectionCopy
   bestSellers: HomeSectionCopy
@@ -135,6 +146,7 @@ export const siteContentDefaults: SiteContent = {
     ],
     brandName: 'I Natural',
     brandSubline: 'Clean & Care',
+    logoImage: '',
     navLinks: [
       { href: '/', label: 'الرئيسية' },
       { href: '/products', label: 'المتجر' },
@@ -155,6 +167,16 @@ export const siteContentDefaults: SiteContent = {
     image: '/hero/dishwashing-premium.png'
   },
   home: {
+    sectionVisibility: {
+      offers: true,
+      collections: true,
+      bestSellers: true,
+      why: true,
+      certifications: true,
+      testimonials: true,
+      journal: true,
+      cta: true
+    },
     offers: {
       eyebrow: 'اختيارات الشهر',
       title: 'عروض مختارة بعناية',
